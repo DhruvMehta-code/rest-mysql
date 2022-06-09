@@ -3,7 +3,6 @@ package mesage
 import (
 	"net/http"
 	"rest-go/rest-go-mysql/connect"
-
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -13,7 +12,11 @@ var db = connect.Connect()
 
 func ReadMessage(ctx *gin.Context) {
 	var msg connect.Mesage
-	msg.Postdate = time.Now()
+	if msg.Postdate == "" {
+		t := time.Now().Format("15:04:05")
+		d := time.Now().Format("Jan 2, 2006")
+		msg.Postdate = d + " " + t
+	}
 	err := ctx.BindJSON(&msg)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
